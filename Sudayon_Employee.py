@@ -67,12 +67,17 @@ lblnum_FPS = Label (frminput_FPS, text="Number:", font=("Arial", 10), bg=color1,
 entnum_FPS = Entry(frminput_FPS, font=("Arial", 10), bg="white", width=22)
 
 lblstats_FPS = Label(frminput_FPS, text="Status:", font=("Arial",10),bg=color1, fg="white")
-list_stats = Listbox(frminput_FPS, width=22, font=("Arial", 10), height=0)
-list_stats.insert(1, "Single")
-list_stats.insert(2, "Married")
-list_stats.insert(3, "Widowed")
-list_stats.insert(4, "Separated")
-list_stats.insert(5, "Divorced")
+list_stats_FPS = Listbox(frminput_FPS, width=22, font=("Arial", 10), height=0)
+list_stats = ["Single", "Married", "Widowed", "Seperated", "Divorced"]
+
+for stat in list_stats:
+    list_stats_FPS.insert(END, stat)
+
+#list_stats.insert(1, "Single")
+#list_stats.insert(2, "Married")
+#list_stats.insert(3, "Widowed")
+#list_stats.insert(4, "Separated")
+#list_stats.insert(5, "Divorced")
 
 lblemail_FPS = Label(frminput_FPS, text="Email:", font=("Arial", 10), bg=color1, fg="white")
 entemail_FPS = Entry(frminput_FPS, font=("Arial", 10), bg="white",  width=22)
@@ -132,8 +137,8 @@ def leftclick(event):
     weekly = float(daily * 6)
     monthly = float(daily * 24)
 
-    stats = list_stats.curselection()
-    stats1 = list_stats.get(stats[0])
+    stats = list_stats_FPS.curselection()
+    stats1 = list_stats_FPS.get(stats[0])
 
     try:
         cursor = conn.cursor()
@@ -174,8 +179,8 @@ def rightclick(event):
     weekly = float(daily * 6)
     monthly = float(daily * 24)
 
-    stats = list_stats.curselection()
-    stats1 = list_stats.get(stats[0])
+    stats = list_stats_FPS.curselection()
+    stats1 = list_stats_FPS.get(stats[0])
     try:
         cursor = conn.cursor()
         sql = "INSERT INTO tbl_employee(name,age,gender,address,contact,status,email,position,e_type,h_rate,n_hours,d_rate,w_payment,m_payment) " \
@@ -228,8 +233,11 @@ def display_selected(event):
 
     entnum_FPS.insert(0, contact)
 
-    list_stats = Listbox(frminput_FPS)
+    list_stats = ["Single","Married","Widowed","Separated","Divorced"]
     list_stats.insert(0, status)
+
+    for stat_ in list_stats:
+        list_stats_FPS.insert(END, stat_)
 
     entemail_FPS.insert(0, email)
     entposi_FPS.insert(0, position)
@@ -254,26 +262,32 @@ def update(event):
     zip = entzip_FPS.get()
     coun = cmb_coun_FPS.get()
     add = (st + ", " + ct + ", " + prov + ", " + coun + ", " + zip)
-    numhour = int(8)
+    numhour = entrate_FPS.get()
     rt = int(entrate_FPS.get())
     daily = float(rt * 8)
     weekly = float(daily * 6)
     monthly = float(daily * 24)
 
-    stats = list_stats.curselection()
-    stats1 = list_stats.get(stats[0])
+    stats = list_stats_FPS.curselection()
+    if stats==():
+        messagebox.showinfo("Unselected status:","Reselect your current status, If you don't want to change it")
 
+    else:
+        stats1 = list_stats_FPS.get(stats[0])
+
+    list_stats_FPS.insert(0, stats1)
     try:
         cursor = conn.cursor()
 
-        sql = "UPDATE tbl_employee SET (name,age,gender,address,contact,status,email,position,h_rate,n_hours,d_rate,w_payment,m_payment) " \
-              "VALUES('" + name + "','" + str(age) + "','" + str(gen) + "','" + str(add) + "','" + str(enum) + "','" + str(stats1) + "'," \
-              "'" + email + "','" + posi + "','" + str(rt) + "','" + str(numhour) + "','" + str(daily) + "','" + str(weekly) + "','" + str(monthly) + "')"
+        sql = "UPDATE tbl_employee SET name='" + name + "',age='" + str(age) + "',gender='" + str(gen) + "',address='" + str(add) + "',contact='" + str(enum) + "'" \
+              ",status='" + str(stats1) + "',email='" + email + "',position='" + posi + "',h_rate='" + str(rt) + "',n_hours = '" + str(numhour) + "',d_rate='" + str(daily) + "'" \
+              ",w_payment='" + str(weekly) + "',m_payment='" + str(monthly) + "' where id ='" + str(id) + "' "
         cursor.execute(sql)
         cursor.execute("commit")
         messagebox.showinfo("Save", "Successfully Updated Record!")
         table.delete(*table.get_children())
         show()
+        clear()
         cursor.close()
 
     except Exception as ex:
@@ -296,6 +310,24 @@ def delete(event):
     except Exception as e:
         messagebox.showerror("error", e)
 
+def clearfields(event):
+    table.delete(*table.get_children())
+    show()
+    clear()
+    list_stats = ["Single", "Married", "Widowed", "Seperated", "Divorced"]
+
+    for stat in list_stats:
+        list_stats_FPS.insert(END, stat)
+
+def clear1():
+    table.delete(*table.get_children())
+    show()
+    clear()
+    list_stats = ["Single", "M_ied", "Widowed", "Seperated", "Divorced"]
+
+    for stats in list_stats:
+        list_stats_FPS.insert(END, stats)
+
 def clear():
     entfname_FPS.delete(0, END)
     entMname_FPS.delete(0, END)
@@ -307,6 +339,7 @@ def clear():
     entzip_FPS.delete(0, END)
     cmb_coun_FPS.delete(0, END)
     entnum_FPS.delete(0, END)
+    list_stats_FPS.delete(0, END)
     entemail_FPS.delete(0, END)
     entposi_FPS.delete(0, END)
     entrate_FPS.delete(0, END)
@@ -317,11 +350,14 @@ def show():
         sql = "SELECT id,name,age,gender,address,contact,status,email,position,e_type,h_rate,n_hours,d_rate,w_payment,m_payment FROM tbl_employee"
         cursor.execute(sql)
         rows = cursor.fetchall()
+        radgen1.deselect()
+        radgen2.deselect()
+        radgen3.deselect()
+
         for i,(id,name,age,gender,address,contact,status,email,position,e_type,h_rate,n_hours,d_rate,w_payment,m_payment) in enumerate(rows,start=1):
             table.insert("",'end',values=(id,name,age,gender,address,contact,status,email,position,e_type,h_rate,n_hours,d_rate,w_payment,m_payment))
     except Exception as e:
         messagebox.showerror("error", e)
-
 
 
 #Table Data View
@@ -357,6 +393,9 @@ btnsave_FPS = Button(frminput_FPS, text="Save Employee Record", font=("Arial", 1
 btnsave_FPS.bind("<Button-1>",leftclick)
 btnsave_FPS.bind("<Button-2>",rightclick)
 btnsave_FPS.bind("<Button-3>",rightclick)
+
+btnclear_FPS = Button(frminput_FPS, text="Clear Fields", font=("Arial", 10), activebackground="gray", activeforeground="white")
+btnclear_FPS.bind("<Button-1>",clearfields)
 
 btnupdate_FPS = Button(frminput_FPS, text="Update", font=("Arial", 10), activebackground="gray", activeforeground="white")
 btnupdate_FPS.bind("<Button-1>",update)
@@ -413,7 +452,7 @@ lblnum_FPS.grid(row=10,column=0,sticky='e')
 entnum_FPS.grid(row=10,column=1,pady=5,sticky='w')
 
 lblstats_FPS.grid(row=11,column=0,sticky='e')
-list_stats.grid(row=11,column=1,pady=1)
+list_stats_FPS.grid(row=11,column=1,pady=1)
 
 lblemail_FPS.grid(row=12,column=0,sticky='e')
 entemail_FPS.grid(row=12,column=1,pady=5,sticky='w')
@@ -424,9 +463,10 @@ entposi_FPS.grid(row=13,column=1,pady=5,sticky='w')
 lblrate_FPS.grid(row=14,column=0,sticky='e')
 entrate_FPS.grid(row=14,column=1,sticky='w')
 
-btnsave_FPS.grid(row=17,columnspan=5,pady=15)
-btnupdate_FPS.place(x=120,y=464)
-btndelete_FPS.place(x=362,y=464)
+btnsave_FPS.grid(row=17,column=0,columnspan=3,pady=15)
+btnclear_FPS.grid(row=18,columnspan=5,pady=0)
+btnupdate_FPS.grid(row=17,column=1,columnspan=4,pady=15)
+btndelete_FPS.grid(row=17,column=2,columnspan=3,pady=15)
 
 
 root_FPS.mainloop()

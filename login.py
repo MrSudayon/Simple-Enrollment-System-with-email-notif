@@ -19,6 +19,31 @@ login_RS.configure(bg="Antique White")
 login_RS.geometry("350x350")
 login_RS.resizable(width="false", height="false")
 
+
+
+tops_RS = Frame(login_RS, width=500, height=100, bg=Anti)
+tops_RS.place(anchor="n", x=200, y=40)
+
+#Image Admin
+img = (Image.open("imgs/administrator.png"))
+resized_img= img.resize((80,80), Image.Resampling.LANCZOS)
+new_img= ImageTk.PhotoImage(resized_img)
+labelimg = Label(login_RS, image = new_img, bg=Anti)
+labelimg.place(anchor="nw", x=45, y=15)
+
+#Contents
+lbltitle_RS = Label(tops_RS, text="LOGIN", bg=Anti, font=font1, fg=color3, width=7, relief=SOLID)
+lbltitle_RS.grid(row=0, column=0)
+
+userlbl_RS = Label(login_RS, text="username:", bg=Anti, font=font3, fg=color3).place(anchor="w", relx=.1, rely=.4)
+usertxt_RS = Entry(login_RS, bg="#fff1c9", font=font3, fg=color3, width=25, relief=RAISED)
+usertxt_RS.place(anchor="w", relx=.3, rely=.4)
+
+passlbl_RS = Label(login_RS, text="password:", bg=Anti, font=font3, fg=color3).place(anchor="w", relx=.1, rely=.5)
+passtxt_RS = Entry(login_RS, bg="#fff1c9", font=font3, fg=color3, width=25, show="*", relief=RAISED)
+passtxt_RS.place(anchor="w", relx=.3, rely=.5)
+
+#Functions
 def create():
     create = Tk()
     create.title("Create Account")
@@ -63,20 +88,18 @@ def create():
 
     def register(event):
         clear()
-        try:
-            user = unametxt.get()
-            pasw = passtxt.get()
-            cpas = cpasstxt.get()
-            email = emailtxt.get()
+        user = unametxt.get()
+        pasw = passtxt.get()
+        cpas = cpasstxt.get()
+        email = emailtxt.get()
 
+        try:
             if pasw == cpas:
                 cursor = conn.cursor()
-                sql = "INSERT into tbl_user (user, password, email) VALUES ('"+ user +"', '"+ pasw +"', '"+ email +"')"
+                sql = "insert into tbl_user (user, password, email) values ('"+ user +"', '"+ pasw +"', '"+ email +"')"
                 cursor.execute(sql)
                 cursor.execute("commit")
                 messagebox.showinfo("Save", "Registered!")
-                cursor.close()
-
             else:
                 messagebox.showinfo("Invalid","Password doesn't match!")
 
@@ -99,43 +122,14 @@ def create():
 
     create.mainloop()
 
-tops_RS = Frame(login_RS, width=500, height=100, bg=Anti)
-tops_RS.place(anchor="n", x=200, y=40)
-
-#Image Admin
-global img
-img = (Image.open("imgs/administrator.png"))
-resized_img= img.resize((80,80), Image.Resampling.LANCZOS)
-new_img= ImageTk.PhotoImage(resized_img)
-labelimg = Label(login_RS, image = new_img, bg=Anti)
-labelimg.place(anchor="nw", x=45, y=15)
-
-#Contents
-lbltitle_RS = Label(tops_RS, text="LOGIN", bg=Anti, font=font1, fg=color3, width=7, relief=SOLID)
-lbltitle_RS.grid(row=0, column=0)
-
-userlbl_RS = Label(login_RS, text="username:", bg=Anti, font=font3, fg=color3).place(anchor="w", relx=.1, rely=.4)
-usertxt_RS = Entry(login_RS, bg="#fff1c9", font=font3, fg=color3, width=25, relief=RAISED)
-usertxt_RS.place(anchor="w", relx=.3, rely=.4)
-
-passlbl_RS = Label(login_RS, text="password:", bg=Anti, font=font3, fg=color3).place(anchor="w", relx=.1, rely=.5)
-passtxt_RS = Entry(login_RS, bg="#fff1c9", font=font3, fg=color3, width=25, show="*", relief=RAISED)
-passtxt_RS.place(anchor="w", relx=.3, rely=.5)
-
-#Functions
 def logged():
     login_RS.destroy()
-    from Sudayon_Employee import root_FPS
-    root_FPS.mainloop()
+    from student_enrollment import displayarr
+    displayarr.mainloop()
 
 def clear():
     usertxt_RS.delete(0, END)
     passtxt_RS.delete(0, END)
-    unametxt.delete(0, END)
-    passtxt.delete(0, END)
-    cpasstxt.delete(0, END)
-    emailtxt.delete(0, END)
-
 
 def login(event):
     try:
@@ -172,8 +166,7 @@ loginbtn_RS = Button(login_RS, text="Submit", bg="#ffc82b", font=font2, fg=color
 loginbtn_RS.place(anchor="s", x=180, y=240)
 loginbtn_RS.bind("<Button-1>",login)
 
-createacc_RS = Button(login_RS, text="Create account?", bg=Anti, font=font4, fg="blue", cursor="hand2", command= create, relief = FLAT)
-createacc_RS.place(anchor="s", x=180, y=270)
+Button(login_RS, text="Create account?", bg=Anti, font=font4, fg="blue", cursor="hand2", command= create, relief = FLAT).place(anchor="s", x=180, y=270)
 
 
 #About Developer

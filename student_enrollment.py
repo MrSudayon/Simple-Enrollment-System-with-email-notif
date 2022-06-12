@@ -217,20 +217,20 @@ def completed(event):
 def logoutt(event):
     try:
         cursorarr = conn.cursor()
-        cursorarr1 = conn.cursor()
-
-        sqllast = "select id, user from tbl_logs ORDER BY id DESC LIMIT 1"
-        cursorarr1.execute(sqllast)
-        result = cursorarr1.fetchall()
-        myres = [result]
-        fres = list(myres[id].user())
         msg = "LOGGED-OUT AT SYSTEM"
 
-        sqllog = "insert into tbl_logs (user, action, timedate)" \
-                 "values ('"+ fres +"' , '" + msg + "', NOW())"
+        sqllast = "SELECT user FROM tbl_logs ORDER BY id DESC LIMIT 1"
+        cursorarr.execute(sqllast)
+        last_id = cursorarr.fetchone()
+
+        for lastuser in last_id:
+            sqllog = "insert into tbl_logs (user, action, timedate)" \
+                     "values ('" + lastuser + "' , '" + msg + "', NOW())"
+
         cursorarr.execute(sqllog)
         cursorarr.execute("commit")
-        #messagebox.showinfo("Welcome", "Successfully Logged uut")
+        cursorarr.close()
+        messagebox.showinfo("Welcome", "Successfully Logged out")
 
         displayarr.destroy()
 

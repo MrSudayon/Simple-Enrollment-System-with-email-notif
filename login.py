@@ -36,11 +36,11 @@ lbltitle_RS = Label(tops_RS, text="LOGIN", bg=Anti, font=font1, fg=color3, width
 lbltitle_RS.grid(row=0, column=0)
 
 userlbl_RS = Label(login_RS, text="username:", bg=Anti, font=font3, fg=color3).place(anchor="w", relx=.1, rely=.4)
-usertxt_RS = Entry(login_RS, bg="#fff1c9", font=font3, fg=color3, width=25, relief=RAISED)
+usertxt_RS = Entry(login_RS, bg="#fff1c9", font=font3, fg=color3, width=25)
 usertxt_RS.place(anchor="w", relx=.3, rely=.4)
 
 passlbl_RS = Label(login_RS, text="password:", bg=Anti, font=font3, fg=color3).place(anchor="w", relx=.1, rely=.5)
-passtxt_RS = Entry(login_RS, bg="#fff1c9", font=font3, fg=color3, width=25, show="*", relief=RAISED)
+passtxt_RS = Entry(login_RS, bg="#fff1c9", font=font3, fg=color3, width=25, show="*")
 passtxt_RS.place(anchor="w", relx=.3, rely=.5)
 
 #Functions

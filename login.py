@@ -53,12 +53,6 @@ def create():
     crt_tops = Frame(create, width=500, height=100, bg=Anti)
     crt_tops.place(anchor="n", x=235, y=55)
 
-    # Image Register
-    # = (Image.open("imgs/register.png"))
-    #resized_img1 = img1.resize((90, 90), Image.Resampling.LANCZOS)
-    #new_img1 = ImageTk.PhotoImage(resized_img1)
-    #labelimg1 = Label(create, image=new_img1, bg=Anti).place(anchor="nw", x=70, y=25)
-
     crt_title = Label(crt_tops, text="Register", bg=Anti, font=font1, fg=color3, width=8, relief=SOLID)
     crt_title.grid(column=0, row=0)
 
@@ -133,8 +127,10 @@ def clear():
 
 def login(event):
     try:
+        global usern
         usern = usertxt_RS.get()
         passw = passtxt_RS.get()
+        msg = "LOGGED-IN AT SYSTEM"
 
         cursor = conn.cursor()
         sql = "SELECT user,password FROM tbl_user WHERE user = %s and password = %s"
@@ -143,7 +139,13 @@ def login(event):
 
         if rows:
             for i in rows:
+                sqllog = "insert into tbl_logs (user, action, timedate)" \
+                      "values ('"+ usern +"', '"+ msg +"', NOW())"
+                cursor.execute(sqllog)
+                cursor.execute("commit")
                 messagebox.showinfo("Welcome","Successfully Logged In")
+
+                cursor.close()
                 logged()
                 break
 

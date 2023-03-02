@@ -175,7 +175,7 @@ Button(login_RS, text="Create account?", bg=Anti, font=font4, fg="blue", cursor=
 def open_url(url):
    webbrowser.open_new_tab(url)
 
-url = 'https://www.linktr.ee/k1raaa'
+url = 'https://www.linktr.ee/suu2'
 aboutdev = Label(login_RS, text="Developer ©", bg=Anti, font=font3, fg=color3, cursor="hand2")
 aboutdev.place(anchor="sw", x=5, y=345)
 aboutdev.bind("<Button-1>", lambda event: open_url(url))
